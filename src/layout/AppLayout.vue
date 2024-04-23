@@ -11,67 +11,99 @@ const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 const outsideClickListener = ref(null);
 
 watch(isSidebarActive, (newVal) => {
-    if (newVal) {
-        bindOutsideClickListener();
-    } else {
-        unbindOutsideClickListener();
-    }
+  if (newVal) {
+    bindOutsideClickListener();
+  } else {
+    unbindOutsideClickListener();
+  }
 });
 
 const containerClass = computed(() => {
-    return {
-        'layout-theme-light': layoutConfig.darkTheme.value === 'light',
-        'layout-theme-dark': layoutConfig.darkTheme.value === 'dark',
-        'layout-overlay': layoutConfig.menuMode.value === 'overlay',
-        'layout-static': layoutConfig.menuMode.value === 'static',
-        'layout-static-inactive': layoutState.staticMenuDesktopInactive.value && layoutConfig.menuMode.value === 'static',
-        'layout-overlay-active': layoutState.overlayMenuActive.value,
-        'layout-mobile-active': layoutState.staticMenuMobileActive.value,
-        'p-ripple-disabled': layoutConfig.ripple.value === false
-    };
+  return {
+    'layout-theme-light': layoutConfig.darkTheme.value === 'light',
+    'layout-theme-dark': layoutConfig.darkTheme.value === 'dark',
+    'layout-overlay': layoutConfig.menuMode.value === 'overlay',
+    'layout-static': layoutConfig.menuMode.value === 'static',
+    'layout-static-inactive':
+      layoutState.staticMenuDesktopInactive.value && layoutConfig.menuMode.value === 'static',
+    'layout-overlay-active': layoutState.overlayMenuActive.value,
+    'layout-mobile-active': layoutState.staticMenuMobileActive.value,
+    'p-ripple-disabled': layoutConfig.ripple.value === false
+  };
 });
 const bindOutsideClickListener = () => {
-    if (!outsideClickListener.value) {
-        outsideClickListener.value = (event) => {
-            if (isOutsideClicked(event)) {
-                layoutState.overlayMenuActive.value = false;
-                layoutState.staticMenuMobileActive.value = false;
-                layoutState.menuHoverActive.value = false;
-            }
-        };
-        document.addEventListener('click', outsideClickListener.value);
-    }
+  if (!outsideClickListener.value) {
+    outsideClickListener.value = (event) => {
+      if (isOutsideClicked(event)) {
+        layoutState.overlayMenuActive.value = false;
+        layoutState.staticMenuMobileActive.value = false;
+        layoutState.menuHoverActive.value = false;
+      }
+    };
+    document.addEventListener('click', outsideClickListener.value);
+  }
 };
 const unbindOutsideClickListener = () => {
-    if (outsideClickListener.value) {
-        document.removeEventListener('click', outsideClickListener);
-        outsideClickListener.value = null;
-    }
+  if (outsideClickListener.value) {
+    document.removeEventListener('click', outsideClickListener);
+    outsideClickListener.value = null;
+  }
 };
 const isOutsideClicked = (event) => {
-    const sidebarEl = document.querySelector('.layout-sidebar');
-    const topbarEl = document.querySelector('.layout-menu-button');
+  const sidebarEl = document.querySelector('.layout-sidebar');
+  const topbarEl = document.querySelector('.layout-menu-button');
 
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+  return !(
+    sidebarEl.isSameNode(event.target) ||
+    sidebarEl.contains(event.target) ||
+    topbarEl.isSameNode(event.target) ||
+    topbarEl.contains(event.target)
+  );
 };
 </script>
 
 <template>
-    <div class="layout-wrapper" :class="containerClass">
-        <app-topbar></app-topbar>
-        <div class="layout-sidebar">
-            <app-sidebar></app-sidebar>
-        </div>
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view></router-view>
-            </div>
-            <app-footer></app-footer>
-        </div>
-        <app-config></app-config>
-        <div class="layout-mask"></div>
+  <div class="layout-wrapper" :class="containerClass">
+    <app-topbar></app-topbar>
+    <div class="layout-sidebar">
+      <scroll-panel
+        style="width: 100%; height: 100%"
+        :pt="{
+          wrapper: {
+            style: { 'border-right': '4px solid var(--surface-card)', 'border-radius': '12px' }
+          },
+          bary: {
+            class: 'hover:bg-primary-400 bg-primary-300 opacity-100 bary-width'
+          }
+        }"
+      >
+        <app-sidebar style="padding: 0.5rem 1.5rem"></app-sidebar>
+      </scroll-panel>
     </div>
-    <Toast />
+
+    <scroll-panel
+      style="width: 100%; height: 100vh"
+      :pt="{
+        wrapper: {
+          style: { 'border-right': '10px solid var(--surface-ground)', 'border-radius': '12px' }
+        },
+        bary: {
+          class: 'hover:bg-primary-400 bg-primary-300 opacity-100 bary-width'
+        }
+      }"
+    >
+      <div class="layout-main-container">
+        <div class="layout-main">
+          <router-view></router-view>
+        </div>
+<!--        <app-footer></app-footer>-->
+      </div>
+    </scroll-panel>
+
+    <app-config></app-config>
+    <div class="layout-mask"></div>
+  </div>
+  <Toast />
 </template>
 
 <style lang="scss" scoped></style>

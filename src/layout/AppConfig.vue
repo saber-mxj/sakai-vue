@@ -23,7 +23,7 @@ const menuModes = ref([
     { label: 'Static', value: 'static' },
     { label: 'Overlay', value: 'overlay' }
 ]);
-const compactMaterial = ref(false);
+const compactMaterial = ref(true);
 const primaryFocusRing = ref(true);
 
 const { setScale, layoutConfig } = useLayout();

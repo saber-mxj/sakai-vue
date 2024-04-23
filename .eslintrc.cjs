@@ -15,6 +15,7 @@ module.exports = {
             {
                 order: ['script', 'template', 'style']
             }
-        ]
+        ],
+        "indent": ['error', 2]
     }
 };
