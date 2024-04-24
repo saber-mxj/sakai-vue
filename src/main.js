@@ -110,9 +110,12 @@ import zhCN from '@/locals/zh-CN.js';
 import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
+import './permission'; // permission control
+import store from './store';
 
 const app = createApp(App);
 
+app.use(store);
 app.use(router);
 app.use(PrimeVue, {
   ripple: true,

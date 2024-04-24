@@ -1,6 +1,6 @@
 .layout-sidebar {
     position: fixed;
-    width: 300px;
+    width: 220px;
     height: calc(100vh - 5rem);
     z-index: 999;
     user-select: none;
@@ -35,8 +35,6 @@
     }
 
     a {
-        user-select: none;
-
         &.active-menuitem {
             > .layout-submenu-toggler {
                 transform: rotate(-180deg);
